@@ -1,0 +1,12 @@
+#
+he_login=username
+he_passwd=password
+he_ipaddr=10.0.0.1
+cookiefile=`/bin/mktemp`
+backupdir=/volume1/Hubitat/Server
+backupfile=$backupdir/$(date +%Y%m%d-%H%M).lzf
+#
+find $backupdir/*.lzf -mtime +5 -exec rm {} \;
+curl -k -c $cookiefile -d username=$he_login -d password=$he_passwd https://$he_ipaddr/login
+curl -k -sb $cookiefile https://$he_ipaddr/hub/backupDB?fileName=latest -o $backupfile
+rm $cookiefile
